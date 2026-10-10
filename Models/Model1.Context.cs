@@ -13,10 +13,10 @@ namespace _25DH110487_MyStore.Models
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
     
-    public partial class MyStoreEntities1 : DbContext
+    public partial class MyStoreEntities3 : DbContext
     {
-        public MyStoreEntities1()
-            : base("name=MyStoreEntities1")
+        public MyStoreEntities3()
+            : base("name=MyStoreEntities3")
         {
         }
     
@@ -25,5 +25,12 @@ namespace _25DH110487_MyStore.Models
             throw new UnintentionalCodeFirstException();
         }
     
+        public virtual DbSet<Category> Categories { get; set; }
+        public virtual DbSet<Customer> Customers { get; set; }
+        public virtual DbSet<Order> Orders { get; set; }
+        public virtual DbSet<OrderDetail> OrderDetails { get; set; }
+        public virtual DbSet<Product> Products { get; set; }
+        public virtual DbSet<sysdiagram> sysdiagrams { get; set; }
+        public virtual DbSet<User> Users { get; set; }
     }
 }

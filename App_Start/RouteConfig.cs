@@ -17,7 +17,7 @@ namespace _25DH110487_MyStore
                 name: "Default",
                 url: "{controller}/{action}/{id}",
                 defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional },
-                namespaces: new[] { "25DH110487_MyStore.Controllers" }
+                namespaces: new[] { "_25DH110487_MyStore.Controllers" } // Thêm dòng này
             );
         }
     }

@@ -18,7 +18,7 @@ namespace _25DH110487_MyStore.Areas.Admin
                 "Admin_default",
                 "Admin/{controller}/{action}/{id}",
                 new { action = "Index", id = UrlParameter.Optional },
-                namespaces: new[] { "25DH110487_MyStore.Areas.Admin.Controllers" }
+                new[] { "_25DH110487_MyStore.Areas.Admin.Controllers" } // Thêm dòng này
 
             );
         }
