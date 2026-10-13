@@ -1,0 +1,59 @@
+﻿@model _25DH110487_MyStore.Models.ViewModels.ProductSearchVM
+@using PagedList.Mvc;
+
+<style>
+    img {
+        height: 100px;
+        max-width: 100px;
+        object-fit: cover;
+    }
+</style>
+
+@if (Model.Products != null && Model.Products.Any())
+{
+    <table class="table table-bordered table-striped bg-info">
+        <thead>
+            <tr class="bg-success text-white">
+                <th>Hình ảnh</th>
+                <th>Tên sản phẩm</th>
+                <th>Đơn giá</th>
+                <th>Danh mục</th>
+                <th>Thao tác</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Products)
+            {
+                <tr>
+                    <td>
+                        <img src="@Url.Content(item.ProductImage ?? "~/Content/images/default_img.png")" alt="Product Image" />
+                    </td>
+                    <td>@Html.DisplayFor(modelItem => item.ProductName)</td>
+                    <td>@Html.DisplayFor(modelItem => item.ProductPrice)</td>
+                    <td>@Html.DisplayFor(modelItem => item.Category.CategoryName)</td>
+                    <td>
+                        @Html.ActionLink("Sửa", "Edit", new { id = item.ProductID }, new { @class = "btn btn-primary btn-sm" })
+                        @Html.ActionLink("Chi tiết", "Details", new { id = item.ProductID }, new { @class = "btn btn-info btn-sm text-white" })
+                        @Html.ActionLink("Xóa", "Delete", new { id = item.ProductID }, new { @class = "btn btn-danger btn-sm" })
+                    </td>
+                </tr>
+            }
+        </tbody>
+        }
+
+        <!-- Thanh phân trang -->
+        <div class="d-flex justify-content-center">
+            Trang @(Model.Products.PageCount < Model.Products.PageNumber ? 0 : Model.Products.PageNumber) / @Model.Products.PageCount
+            @Html.PagedListPager(Model.Products, page => Url.Action("Index", new { page, searchTerm = Model.SearchTerm, minPrice = Model.MinPrice, maxPrice = Model.MaxPrice, sortOrder = Model.SortOrder }))
+        </div>
+        }
+        else
+        {
+        <p class="text-danger font-weight-bold">Không tìm thấy sản phẩm nào phù hợp.</p>
+        }
+
+        <p class="mt-3">
+            @Html.ActionLink("Thêm mới", "Create", null, new { @class = "btn btn-success" })
+        </p>
+    </table>
+}
