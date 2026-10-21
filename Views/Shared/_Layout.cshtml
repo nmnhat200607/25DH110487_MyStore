@@ -1,36 +1,136 @@
-﻿<!DOCTYPE html>
+﻿@{
+    // Lấy thông tin giỏ hàng
+    var cart = Session["Cart"] as _25DH110487_MyStore.Models.ViewModels.Cart;
+
+    // Tạo đối tượng ViewBag.pmmodel dạng PersonalMenuVM và lưu trong ViewBag
+    ViewBag.pmmodel = new _25DH110487_MyStore.Models.ViewModels.PersonalMenuVM
+    {
+        IsLoggedIn = User.Identity.IsAuthenticated,
+        Username = User.Identity.IsAuthenticated ? User.Identity.Name : string.Empty
+    };
+
+    // Nếu giỏ hàng không rỗng thì gán số lượng mặt hàng trong giỏ cho CartCount
+    if (cart != null && cart.Items.Any())
+    {
+        ViewBag.pmmodel.CartCount = cart.Items.Count();
+    }
+}
+<!DOCTYPE html>
 <html>
 <head>
+    <link rel="stylesheet" type="text/css" href="@Url.Content("~/Content/myStyle/CustomerHome.css")" />
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewBag.Title - My ASP.NET Application</title>
+    <title>My Store: @ViewBag.Title</title>
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+    <style>
+        ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+        }
+
+        li {
+            margin-right: 20px;
+            position: relative;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #f9f9f9;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+        }
+
+            .dropdown-content a {
+                color: black;
+                padding: 12px 16px;
+                text-decoration: none;
+                display: block;
+            }
+
+                .dropdown-content a:hover {
+                    background-color: #f1f1f1;
+                }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+    </style>
 </head>
 <body>
-    <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-dark">
-        <div class="container">
-            @Html.ActionLink("Application name", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
-            <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" title="Toggle navigation" aria-controls="navbarSupportedContent"
-                    aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse d-sm-inline-flex justify-content-between">
-                <ul class="navbar-nav flex-grow-1">
-                    <li>@Html.ActionLink("Home", "Index", "Home", new { area = "" }, new { @class = "nav-link" })</li>
-                    <li>@Html.ActionLink("About", "About", "Home", new { area = "" }, new { @class = "nav-link" })</li>
-                    <li>@Html.ActionLink("Contact", "Contact", "Home", new { area = "" }, new { @class = "nav-link" })</li>
+    <div class="navbar navbar-default navbar-fixed-top" style="background-color: white; border-bottom: 1px solid #ddd;">
+        <header class="container-fluid" style="background-color:lightgreen; padding: 5px 0;">
+            <h4 style="text-align:center; color:green; margin: 5px 0;">
+                Free ship đơn từ 40k, giảm nhiều hơn cùng <span style="font-weight:bolder; font-style:italic;"><span style="color:blue;">FREESHIP</span> XTRA</span>
+            </h4>
+        </header>
+        <div class="container" style="display: flex; justify-content: space-between; align-items: center; padding: 10px 15px;">
+            <div class="navbar-header">
+                <a href="@Url.Action("Index", "Home")" class="navbar-brand" style="font-weight: bold; font-size: 24px; color: #333; text-decoration: none;">
+                    FASTOR
+                </a>
+            </div>
+            <div>
+                <ul style="list-style-type: none; margin: 0; padding: 0; display: flex; flex-direction: row; align-items: center; gap: 25px;">
+                    <li>
+                        <i class="fas fa-home"></i>
+                        @Html.ActionLink("Trang chủ", "Index", "Home", null, new { style = "text-decoration:none; color:#333; font-weight:500;" })
+                    </li>
+                    <li class="dropdown" style="position: relative;">
+                        <i class="fas fa-user"></i>
+                        <a href="javascript:void(0)" id="account-name" style="text-decoration:none; color:#333; font-weight:500;">
+                            @if (ViewBag.pmmodel.IsLoggedIn)
+                            {
+                                <text>Hello, </text>@ViewBag.pmmodel.Username
+                            }
+                            else
+                            {
+                                <text>Tài khoản</text>
+                            }
+                        </a>
+                        <div class="dropdown-content">
+                            @if (ViewBag.pmmodel.IsLoggedIn)
+                            {
+                                <a href="@Url.Action("Profile", "Account")">Thông tin tài khoản</a>
+                                <a href="@Url.Action("OrderHistory", "Order")">Lịch sử mua hàng</a>
+                                <a href="@Url.Action("Logout", "Account")">Đăng xuất</a>
+                            }
+                            else
+                            {
+                                <a href="@Url.Action("Register", "Account")">Đăng ký</a>
+                                <a href="@Url.Action("Login", "Account")">Đăng nhập</a>
+                            }
+                        </div>
+                    </li>
+                    <li>
+                        <a href="@Url.Action("Index", "Cart")" style="text-decoration:none; color:#333; font-weight:500;">
+                            <i class="fas fa-shopping-cart"></i> Giỏ hàng (<span id="cart-count">@ViewBag.pmmodel.CartCount</span>)
+                        </a>
+                    </li>
                 </ul>
             </div>
         </div>
-    </nav>
-    <div class="container body-content">
-        @RenderBody()
-        <hr />
-        <footer>
-            <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
-        </footer>
     </div>
+
+    <div class="container body-content" style="margin-top: 90px;">
+        @RenderBody()
+    </div>
+
+    <footer style="background-color: #cccccc; padding: 25px 40px; margin-top: 30px; display: flex; justify-content: space-between; align-items: center; color: #333;">
+        <div>
+            <p style="margin: 0;">&copy; @DateTime.Now.Year - Tên ứng dụng</p>
+        </div>
+        <div style="text-align: right;">
+            <h4 style="margin: 0 0 5px 0; font-weight: normal;">Contact</h4>
+            <p style="margin: 0; font-size: 0.9rem;">Tên các thành viên trong nhóm</p>
+        </div>
+    </footer>
 
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")

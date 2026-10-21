@@ -1,33 +1,154 @@
-﻿@{
-    ViewBag.Title = "Home Page";
+﻿@model _25DH110487_MyStore.Models.ViewModels.HomeProductVM
+@{
+    ViewBag.Title = "Customer Home Page";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<main>
-    <section class="row" aria-labelledby="aspnetTitle">
-        <h1 id="title">ASP.NET</h1>
-        <p class="lead">ASP.NET is a free web framework for building great Web sites and Web applications using HTML, CSS and JavaScript.</p>
-        <p><a href="https://asp.net" class="btn btn-primary btn-md">Learn more &raquo;</a></p>
-    </section>
+<link rel="stylesheet" type="text/css" href="@Url.Content("~/Content/myStyle/CustomerHome.css")" />
+<link rel="stylesheet" type="text/css" href="@Url.Content("~/Content/PagedList.css")" />
 
-    <div class="row">
-        <section class="col-md-4" aria-labelledby="gettingStartedTitle">
-            <h2 id="gettingStartedTitle">Getting started</h2>
-            <p>
-                ASP.NET MVC gives you a powerful, patterns-based way to build dynamic websites that
-                enables a clean separation of concerns and gives you full control over markup
-                for enjoyable, agile development.
-            </p>
-            <p><a class="btn btn-outline-dark" href="https://go.microsoft.com/fwlink/?LinkId=301865">Learn more &raquo;</a></p>
-        </section>
-        <section class="col-md-4" aria-labelledby="librariesTitle">
-            <h2 id="librariesTitle">Get more libraries</h2>
-            <p>NuGet is a free Visual Studio extension that makes it easy to add, remove, and update libraries and tools in Visual Studio projects.</p>
-            <p><a class="btn btn-outline-dark" href="https://go.microsoft.com/fwlink/?LinkId=301866">Learn more &raquo;</a></p>
-        </section>
-        <section class="col-md-4" aria-labelledby="hostingTitle">
-            <h2 id="hostingTitle">Web Hosting</h2>
-            <p>You can easily find a web hosting company that offers the right mix of features and price for your applications.</p>
-            <p><a class="btn btn-outline-dark" href="https://go.microsoft.com/fwlink/?LinkId=301867">Learn more &raquo;</a></p>
-        </section>
+<style>
+    /* Ép hiển thị Banner gọn gàng, không bị to thô */
+    .banner {
+        background-color: #2563eb;
+        background-image: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url('https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?auto=format&fit=crop&w=1200&q=80');
+        background-size: cover;
+        background-position: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 180px; /* Thu nhỏ chiều cao lại cho thanh lịch */
+        padding: 20px;
+        border-radius: 12px;
+        margin-bottom: 20px;
+    }
+
+    .banner-container h2 {
+        font-size: 1.8rem; /* Thu nhỏ chữ tiêu đề cho cân đối */
+        color: white !important;
+        margin-bottom: 5px;
+        text-shadow: 1px 1px 3px rgba(0,0,0,0.7);
+    }
+
+    .banner-container p {
+        font-size: 1rem; /* Thu nhỏ chữ mô tả */
+        color: #f3f4f6 !important;
+        margin-bottom: 12px;
+        text-shadow: 1px 1px 3px rgba(0,0,0,0.7);
+    }
+
+    .btnBanner {
+        display: inline-block;
+        padding: 8px 20px;
+        background-color: darkorange;
+        color: white !important;
+        text-decoration: none;
+        font-weight: bold;
+    }
+
+    /* Căn chỉnh đều khung Sản phẩm nổi bật (có thanh cuộn ngang như mẫu của cô) */
+    .feature-container {
+        display: flex;
+        overflow-x: auto;
+        gap: 15px;
+        padding: 10px 5px;
+        border-bottom: 1px solid #eee;
+    }
+
+    .fproduct-item {
+        width: 175px;
+        min-height: 340px;
+        border: 1px solid #808080;
+        border-radius: 8px;
+        padding: 8px;
+        flex: 0 0 auto;
+        background: white;
+    }
+
+        .fproduct-item img, .lproduct-item img {
+            display: block;
+            margin: 0 auto 8px auto;
+            height: 150px;
+            width: 100%;
+            object-fit: contain;
+        }
+
+    /* Căn chỉnh đều khung Sản phẩm mới (6 cột trên 1 hàng) */
+    .list-container {
+        list-style-type: none;
+        display: grid;
+        grid-template-columns: repeat(6, 1fr);
+        gap: 15px;
+        padding: 0;
+        margin: 0;
+    }
+
+    .lproduct-item {
+        min-height: 310px;
+        border: 1px solid #808080;
+        border-radius: 8px;
+        padding: 8px;
+        background: white;
+    }
+
+    /* Style nút phân trang (1, 2, >>) màu xanh dương giống hệt mẫu */
+    .pagination {
+        display: inline-flex;
+        padding-left: 0;
+        margin: 20px 0;
+        border-radius: 4px;
+        list-style: none;
+    }
+
+        .pagination > li > a, .pagination > li > span {
+            position: relative;
+            float: left;
+            padding: 6px 12px;
+            margin-left: -1px;
+            line-height: 1.42857143;
+            color: #337ab7;
+            text-decoration: none;
+            background-color: #fff;
+            border: 1px solid #ddd;
+        }
+
+        .pagination > .active > a, .pagination > .active > span {
+            z-index: 3;
+            color: #fff;
+            cursor: default;
+            background-color: #337ab7;
+            border-color: #337ab7;
+        }
+</style>
+
+@* PHẦN BANNER *@
+<section class="container-fluid banner">
+    <div class="banner-container">
+        <h2>Chào mừng đến trang web E-commerce</h2>
+        <p>Mua sắm trực tuyến với hàng ngàn sản phẩm đa dạng và chất lượng</p>
+        <a href="#search-section" class="btnBanner">Bắt đầu mua sắm</a>
     </div>
-</main>
+</section>
+
+@* PHẦN TÌM KIẾM SẢN PHẨM *@
+<section id="search-section" class="container-fluid searchProd">
+    <h2>Tìm kiếm sản phẩm</h2>
+    @using (Html.BeginForm("Index", "Home", FormMethod.Get))
+    {
+        <div class="form-group search-container">
+            @Html.TextBoxFor(m => m.SearchTerm, new
+            {
+                @class = "search-input",
+                placeholder = "Nhập tên, mô tả hoặc chủng loại sản phẩm"
+            })
+            <button type="submit" class="search-button">Tìm kiếm</button>
+        </div>
+    }
+</section>
+<hr />
+
+@* PHẦN SẢN PHẨM NỔI BẬT *@
+@Html.Partial("_PVFeatureProduct", Model)
+
+@* PHẦN SẢN PHẨM MỚI *@
+@Html.Partial("_PVNewProduct", Model)

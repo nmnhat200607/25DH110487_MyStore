@@ -1,0 +1,47 @@
+﻿@model IEnumerable<_25DH110487_MyStore.Models.Order>
+@{
+    ViewBag.Title = "Đơn hàng của tôi";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Đơn hàng của tôi</h2>
+
+@using (Html.BeginForm("OrderHistory", "Order", FormMethod.Get, new { @class = "form-inline", style = "margin-bottom: 20px;" }))
+{
+    <input type="text" name="searchOrder" class="form-control" style="width: 350px;" placeholder="Tìm đơn hàng theo Mã đơn hàng hoặc Tên sản phẩm..." />
+    <button type="submit" class="btn btn-info">Tìm đơn hàng</button>
+}
+
+@if (!Model.Any())
+{
+    <p>Bạn chưa có đơn hàng nào.</p>
+}
+else
+{
+    foreach (var order in Model)
+    {
+        <div style="border: 1px solid #ddd; border-radius: 8px; padding: 15px; margin-bottom: 20px; background: #fff;">
+            <div style="display:flex; justify-content:space-between; border-bottom: 1px solid #eee; padding-bottom: 10px; margin-bottom: 10px;">
+                <strong>Mã đơn hàng: #@order.OrderID - Ngày đặt: @order.OrderDate.ToString("dd/MM/yyyy HH:mm")</strong>
+                <span class="text-primary"><strong>@order.PaymentStatus</strong></span>
+            </div>
+            <table class="table" style="margin-bottom: 10px;">
+                @foreach (var item in order.OrderDetails)
+                {
+                    <tr>
+                        <td style="width: 80px;"><img src="@item.Product.ProductImage" style="max-height: 60px;" /></td>
+                        <td>
+                            <strong>@item.Product.ProductName</strong><br />
+                            <small>Số lượng: x @item.Quantity</small>
+                        </td>
+                        <td style="text-align: right;">@item.UnitPrice.ToString("N0") đ</td>
+                    </tr>
+                }
+            </table>
+            <div style="text-align: right;">
+                <h4>Tổng tiền: <span style="color: red;">@order.TotalAmount.ToString("N0") đ</span></h4>
+                @Html.ActionLink("Xem chi tiết", "OrderSuccess", "Order", new { id = order.OrderID }, new { @class = "btn btn-default" })
+            </div>
+        </div>
+    }
+}

@@ -6,7 +6,7 @@ using System.Web.Mvc;
 
 namespace _25DH110487_MyStore.Areas.Admin.Controllers
 {
-    public class HomeController : Controller
+    public class AdminHomeController : Controller
     {
         // GET: Admin/Home
         public ActionResult Index()
